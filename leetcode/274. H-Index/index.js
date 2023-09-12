@@ -23,6 +23,17 @@ var hIndex = function (citations) {
   }
 
   return hIndex;
+
+  // return citations
+  //   .sort((a, b) => a - b)
+  //   .reverse()
+  //   .reduce((hIndex, value, i, arr) => {
+  //     if (arr[i] >= i + 1) {
+  //       return hIndex + 1;
+  //     } else {
+  //       return hIndex;
+  //     }
+  //   }, 0);
 };
 
 // console.log(hIndex([3, 0, 6, 1, 5]));
