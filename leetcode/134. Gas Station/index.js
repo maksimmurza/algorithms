@@ -1,42 +1,35 @@
 /**
- * Мы можем начать путь с той заправки, кол-во топлива на которой больше,
- * чем то, которое надо для того, чтобы добраться до следующей.
+ * Нет необходимости во вложенном цикле. Мы можем определить, можем ли мы в принципе пройти круг
+ * по тому, больше либо равна сумма эл-ов массива gas сумме эл-в cost. Если да, то можем, тк
+ * общее кол-во топлива больше либо равно необходимому для перемещения между заправками.
+ * Для этого достаточно одного прохода.
+ *
+ * Плюс к этому при проходе цикла на каждой позиции мы вычисляем текущее значение топлива. Если
+ * его оказывается недостаточно, то позиция с которой мы начинали - не верна, как и все вплоть
+ * до следующей после текущей, на которой мы сейчас, так как сначала был +, а на последних шагах
+ * стал -.
  *
  * @param {number[]} gas
  * @param {number[]} cost
  * @return {number}
  */
 var canCompleteCircuit = function (gas, cost) {
-  for (let start = 0; start <= gas.length - 1; start++) {
-    // find station to begin with...
-    if (gas[start] < cost[start]) {
-      continue;
-    }
+  let tank = 0,
+    gasSum = 0,
+    position = 0;
+  for (let i = 0; i <= gas.length - 1; i++) {
+    gasSum += gas[i] - cost[i];
+    tank += gas[i] - cost[i];
 
-    let tank = 0;
-    let currentStation = start;
-
-    do {
-      tank += gas[currentStation] - cost[currentStation];
-
-      if (tank < 0) {
-        break;
-      }
-
-      if (currentStation === gas.length - 1) {
-        currentStation = 0;
-      } else {
-        currentStation++;
-      }
-    } while (currentStation !== start);
-
-    if (currentStation === start) {
-      return start;
+    // if we are in position where tank is emty, so start position is wrong
+    if (tank < 0) {
+      position = i + 1;
+      tank = 0;
     }
   }
 
-  return -1;
+  return gasSum < 0 ? -1 : position;
 };
 
-// console.log(canCompleteCircuit([1, 2, 3, 4, 5], [3, 4, 5, 1, 2]));
-console.log(canCompleteCircuit([3, 3, 4], [3, 4, 4]));
+console.log(canCompleteCircuit([1, 2, 3, 4, 5], [3, 4, 5, 1, 2]));
+// console.log(canCompleteCircuit([3, 3, 4], [3, 4, 4]));
