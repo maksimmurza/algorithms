@@ -3,21 +3,27 @@
  * @param {number[]} nums
  * @return {number}
  *
- * Постепенно расширяем ширину массива, которым мы проходим исходный
+ * Чтобы рассчитать сумму для текущего окна, нужно вычесть левый крайний и
+ * прибавить правый крайний
  */
 const minSubArrayLen = (target, nums) => {
-  const sum = arr => {
-    return arr.reduce((acc, value) => acc + value, 0);
-  };
+  for (let width = 1; width <= nums.length; width++) {
+    // first window
+    let window = nums.slice(0, width).reduce((acc, v) => acc + v, 0);
 
-  for (let j = 0; j <= nums.length; j++) {
-    for (let i = 0; i + j <= nums.length; i++) {
-      if (sum(nums.slice(i, i + j + 1)) >= target) {
-        return j + 1;
+    if (window >= target) {
+      return width;
+    }
+
+    for (let i = 1; i + width <= nums.length - 1; i++) {
+      window += nums[i + width] - nums[i];
+      if (window >= target) {
+        return width;
       }
     }
   }
+
   return 0;
 };
 
-console.log(minSubArrayLen(11, [1, 2, 3, 4, 5]));
+console.log(minSubArrayLen(15, [1, 2, 3, 4, 5]));
